@@ -19,12 +19,12 @@ document.body.appendChild(renderer.domElement);
 const axes = new THREE.AxesHelper(14);
 scene.add(axes);
 
-// Group for shapes
+
 const group = new THREE.Group();
 group.scale.set(1.2, 1.2, 1.2);
 scene.add(group);
 
-// 1️⃣ Pyramid
+//Pyramid
 const pyramid = new THREE.Mesh(
   new THREE.ConeGeometry(1, 1.5, 4), // radius, height, 4 sides = pyramid
   new THREE.MeshStandardMaterial({ color: 0xff0000 })
@@ -32,7 +32,7 @@ const pyramid = new THREE.Mesh(
 pyramid.position.x = -4;
 group.add(pyramid);
 
-// 2️⃣ Polyhedron (Dodecahedron)
+//  Polyhedron (Dodecahedron)
 const polyhedron = new THREE.Mesh(
   new THREE.DodecahedronGeometry(1), // radius
   new THREE.MeshStandardMaterial({ color: 0x00ff00 })
@@ -40,7 +40,7 @@ const polyhedron = new THREE.Mesh(
 polyhedron.position.x = 0;
 group.add(polyhedron);
 
-// 3️⃣ Rectangle (Cuboid)
+// Rectangle (Cuboid)
 const rectangle = new THREE.Mesh(
   new THREE.BoxGeometry(2, 1, 0.5), // width, height, depth
   new THREE.MeshStandardMaterial({ color: 0x0000ff })
