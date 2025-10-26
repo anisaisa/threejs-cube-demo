@@ -81,7 +81,7 @@ function makeBuilding(x, z) {
 makeBuilding(30, -25);
 makeBuilding(15, -25);
 
-const greyBuilding = new THREE.Mesh(new THREE.BoxGeometry(14, 5, 14), greyMat);
+const greyBuilding = new THREE.Mesh(new THREE.BoxGeometry(14, 10, 14), greyMat);
 greyBuilding.position.set(18, 2.5, 6);
 greyBuilding.castShadow = true;
 scene.add(greyBuilding);
@@ -96,7 +96,10 @@ function makeBush(x, z) {
 makeBush(-16, -20);
 makeBush(-13, -23);
 makeBush(-7, -25);
-
+makeBush(-20, -22);
+makeBush(-17, -25);
+makeBush(-3, -25);
+makeBush(-7, -20);
 // Trees
 function makeTree(x, z) {
   const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.6, 4, 8), trunkMat);
@@ -110,8 +113,8 @@ function makeTree(x, z) {
   scene.add(trunk, leaves);
 }
 
-makeTree(10, 15);
-makeTree(25, 25);
+makeTree(15, 25);
+makeTree(25, 29);
 makeTree(32, 14);
 makeTree(28, 16);
 makeTree(34, 18);
