@@ -65,21 +65,29 @@ roadHorizontal.position.set(20, 0.01, -11.4);
 scene.add(roadHorizontal);
 
 // Buildings
-const whitePart1 = new THREE.Mesh(new THREE.BoxGeometry(10, 3.5, 12), whiteMat);
-const whitePart2 = new THREE.Mesh(new THREE.BoxGeometry(10, 3.5, 12), whiteMat);
-whitePart1.position.set(-9, 1.75, 6);
-whitePart2.position.set(-9, 1.75, -7);
-whitePart1.castShadow = whitePart2.castShadow = true;
-scene.add(whitePart1, whitePart2);
+const blueMat = new THREE.MeshPhongMaterial({ color: 0x1E90FF }); // DodgerBlue
 
-function makeBuilding(x, z) {
-  const b = new THREE.Mesh(new THREE.BoxGeometry(9, 5, 9), lightGreyMat);
-  b.position.set(x, 2.5, z);
-  b.castShadow = true;
-  scene.add(b);
-}
-makeBuilding(30, -25);
-makeBuilding(15, -25);
+const bluePart1 = new THREE.Mesh(new THREE.BoxGeometry(10, 3.5, 12), blueMat);
+const bluePart2 = new THREE.Mesh(new THREE.BoxGeometry(10, 3.5, 12), blueMat);
+
+
+bluePart1.position.set(-9, 1.75, 6);
+bluePart2.position.set(-9, 1.75, -7);
+
+bluePart1.castShadow = bluePart2.castShadow = true;
+bluePart1.receiveShadow = bluePart2.receiveShadow = true;
+
+scene.add(bluePart1, bluePart2);
+
+
+const blueBuildingMat = new THREE.MeshPhongMaterial({ color: 0x1E90FF }); 
+
+const blueBuilding = new THREE.Mesh(new THREE.BoxGeometry(20, 5, 9), blueBuildingMat);
+blueBuilding.position.set(22.5, 2.5, -25); 
+blueBuilding.castShadow = blueBuilding.receiveShadow = true;
+scene.add(blueBuilding);
+
+
 
 const greyBuilding = new THREE.Mesh(new THREE.BoxGeometry(14, 10, 14), greyMat);
 greyBuilding.position.set(18, 2.5, 6);
