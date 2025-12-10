@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Three.js Cube Info Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    #infoPanel {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+      border: 1px solid #444;
+      max-width: 260px;
+      font-size: 14px;
+      z-index: 100;
+    }
+
+    #infoPanel h2 {
+      margin: 0 0 8px 0;
+      font-size: 16px;
+    }
+
+    #infoPanel pre {
+      margin: 0;
+      white-space: pre-wrap;
+      font-family: Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+
+
+  <div id="infoPanel">
+    <h2>Cube Info</h2>
+    <pre>Click a cube to see its information here.</pre>
+  </div>
+
+
+  <script type="module" src="script.js"></script>
+
+</body>
+</html>
