@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Three.js Room Project</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #0d0b08;
+      font-family: 'Inter', sans-serif;
+    }
+
+    canvas { display: block; }
+
+    /* ================= UI ================= */
+
+    #ui {
+      position: fixed;
+      bottom: 22px;
+      left: 22px;
+      display: flex;
+      gap: 12px;
+      z-index: 20;
+    }
+
+    #lampUI {
+      position: fixed;
+      top: 22px;
+      right: 22px;
+      display: flex;
+      gap: 12px;
+      z-index: 20;
+    }
+
+    #ui button,
+    #lampUI button {
+      padding: 12px 18px;
+      font-size: 13px;
+      border-radius: 14px;
+      background: linear-gradient(145deg, #2e2218, #1a120c);
+      color: #f5f2ee;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #ui button:hover,
+    #lampUI button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 35px rgba(0,0,0,0.5);
+    }
+
+    /* ================= WARDROBE HINT ================= */
+
+    #wardrobeHint {
+      position: fixed;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      padding: 10px 22px;
+
+      background: linear-gradient(
+        135deg,
+        rgba(40, 28, 18, 0.95),
+        rgba(20, 14, 9, 0.95)
+      );
+
+      color: #f6f2ec;
+      font-size: 14px;
+      letter-spacing: 0.6px;
+      font-family: 'Inter', sans-serif;
+
+      border-radius: 999px;
+      pointer-events: none;
+      opacity: 0;
+
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      z-index: 20;
+    }
+
+    #wardrobeHint.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ================= OVERLAY ================= */
+
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        circle at center,
+        rgba(20,15,10,0.55),
+        rgba(5,4,3,0.9)
+      );
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      z-index: 1000;
+    }
+
+    #overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #overlayContent {
+      width: 760px;
+      max-width: 95%;
+      background: linear-gradient(180deg, #fbf8f2, #efe8dc);
+      padding: 36px;
+      border-radius: 18px;
+      box-shadow: 0 50px 120px rgba(0,0,0,0.45);
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    #overlayTitle {
+      text-align: center;
+      font-size: 34px;
+      margin-bottom: 18px;
+      color: #2e2015;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+    }
+
+    #overlayBody {
+      max-height: 72vh;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    #overlayText {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #4a3a2a;
+      white-space: pre-line;
+      margin-bottom: 26px;
+    }
+
+    /* ================= GALLERY ================= */
+
+    #overlayGallery {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    #overlayGallery img {
+      width: 200px;
+      height: 150px;
+      object-fit: contain;
+      background: #eae3d9;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+      transition: transform 0.3s ease;
+    }
+
+    #overlayGallery img:hover {
+      transform: scale(1.06);
+    }
+
+    #closeOverlay {
+      display: block;
+      margin: 0 auto;
+      padding: 12px 26px;
+      border-radius: 999px;
+      background: #3b2a1b;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.6px;
+      transition: background 0.2s ease;
+    }
+
+    #closeOverlay:hover {
+      background: #4a3422;
+    }
+    /* ================= VIGNETTE ================= */
+
+#vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(0,0,0,0) 55%,
+    rgba(0,0,0,0.15) 75%,
+    rgba(0,0,0,0.35) 100%
+  );
+}
+
+/* ================= WELCOME TITLE ================= */
+
+#welcomeTitle {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  letter-spacing: 2px;
+  color: #f5f2ec;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 50;
+
+  text-shadow:
+    0 0 20px rgba(255, 230, 200, 0.4),
+    0 0 40px rgba(255, 230, 200, 0.2);
+
+  transition:
+    opacity 1.8s ease,
+    transform 1.8s ease;
+}
+
+/* ================= WELCOME TITLE - CAPPUCCINO CLOUD ================= */
+
+#welcomeTitle {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 60px;
+  letter-spacing: 3px;
+  font-weight: 600;
+
+  color: #4b2e1f; /* strong brown cappuccino */
+
+  padding: 30px 70px;
+  border-radius: 60px;
+
+  /* Transparent cloud effect */
+  background: rgba(245, 236, 226, 0.25);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  border: 1px solid rgba(120, 80, 50, 0.25);
+
+  box-shadow:
+    0 25px 60px rgba(60, 35, 20, 0.35),
+    inset 0 0 40px rgba(255, 255, 255, 0.15);
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2000;
+
+  text-align: center;
+
+  transition:
+    opacity 1.5s ease,
+    transform 1.5s cubic-bezier(.19,1,.22,1);
+}
+
+#welcomeTitle.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+#welcomeTitle.show {
+  animation: floatSoft 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatSoft {
+  from {
+    transform: translate(-50%, -52%) scale(1);
+  }
+  to {
+    transform: translate(-50%, -48%) scale(1.02);
+  }
+}
+
+
+  </style>
+</head>
+
+<body>
+
+  <div id="vignette"></div>
+
+
+  <div id="ui">
+    <button id="rotateLeft">Left</button>
+    <button id="rotateRight">Right</button>
+    <button id="rotate90">Rotate</button>
+    <button id="resetObject">Reset</button>
+  </div>
+
+  <div id="lampUI">
+    <button id="lampOn">Lamp ON</button>
+    <button id="lampOff">Lamp OFF</button>
+    <button id="dayMode">Day</button>
+    <button id="nightMode">Night</button>
+  </div>
+
+  <div id="wardrobeHint">Click to open wardrobe</div>
+
+  <div id="overlay">
+    <div id="overlayContent">
+      <h2 id="overlayTitle"></h2>
+      <div id="overlayBody">
+        <p id="overlayText"></p>
+        <div id="overlayGallery"></div>
+      </div>
+      <button id="closeOverlay">Close</button>
+    </div>
+  </div>
+
+  <div id="welcomeTitle">Welcome to My Room</div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
